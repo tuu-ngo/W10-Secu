@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/Vuong-Bach/temp.git
+    repoURL: https://github.com/tuu-ngo/W10-Secu.git
     path: rbac
     targetRevision: main
   destination:
