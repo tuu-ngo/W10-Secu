@@ -37,6 +37,13 @@ jobs:
           version_format: "${major}.${minor}.${patch}"
           bump_each_commit: false
 
+      - name: Debug Context
+        run: |
+          echo "actor=${{ github.actor }}"
+          echo "owner=${{ github.repository_owner }}"
+          echo "repo=${{ github.repository }}"
+      
+      
       - name: Log in to Container Registry
         uses: docker/login-action@v3
         with:
