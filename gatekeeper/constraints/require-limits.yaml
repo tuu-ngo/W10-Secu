@@ -3,7 +3,7 @@ kind: K8sRequireLimits
 metadata:
   name: require-limits
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "10"
 spec:
   enforcementAction: deny
   match:
