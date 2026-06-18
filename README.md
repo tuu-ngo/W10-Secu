@@ -91,7 +91,7 @@ Step 2: Phải đổi image name dòng `24` trong file `app-api/rollout.yaml` th
 kubectl apply -f argocd/root.yaml
 ```
 
-### 5. Setup Email Alert (Optional)
+### 5. Setup Email Alert
 ```bash
 # Follow instructions in app-alert/README.md
 cp app-alert/email-secret.yaml.example app-alert/email-secret.yaml
