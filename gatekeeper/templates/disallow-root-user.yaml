@@ -1,0 +1,42 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8sdisallowrootuser
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sDisallowRootUser
+  targets:
+  - target: admission.k8s.gatekeeper.sh
+    rego: |
+      package k8sdisallowrootuser
+
+      pod_security_contexts[security_context] {
+        security_context := input.review.object.spec.securityContext
+      }
+
+      pod_security_contexts[security_context] {
+        security_context := input.review.object.spec.template.spec.securityContext
+      }
+
+      containers[container] {
+        container := input.review.object.spec.containers[_]
+      }
+
+      containers[container] {
+        container := input.review.object.spec.template.spec.containers[_]
+      }
+
+      violation[{"msg": "runAsUser: 0 is not allowed"}] {
+        security_context := pod_security_contexts[_]
+        security_context.runAsUser == 0
+      }
+
+      violation[{"msg": msg}] {
+        container := containers[_]
+        container.securityContext.runAsUser == 0
+        msg := sprintf("container %v must not run as root", [container.name])
+      }

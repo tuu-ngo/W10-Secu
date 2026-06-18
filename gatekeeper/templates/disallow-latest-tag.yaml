@@ -1,0 +1,29 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8sdisallowlatesttag
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sDisallowLatestTag
+  targets:
+  - target: admission.k8s.gatekeeper.sh
+    rego: |
+      package k8sdisallowlatesttag
+
+      images[image] {
+        image := input.review.object.spec.containers[_].image
+      }
+
+      images[image] {
+        image := input.review.object.spec.template.spec.containers[_].image
+      }
+
+      violation[{"msg": msg}] {
+        image := images[_]
+        endswith(image, ":latest")
+        msg := sprintf("image must not use :latest tag: %v", [image])
+      }
