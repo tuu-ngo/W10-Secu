@@ -1,27 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: eso
+  name: policy-controller
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   project: default
   source:
-    repoURL: https://charts.external-secrets.io
-    chart: external-secrets
-    targetRevision: 0.10.5
+    repoURL: https://sigstore.github.io/helm-charts
+    chart: policy-controller
+    targetRevision: 0.10.2
     helm:
       values: |
-        installCRDs: true
-        resources:
-          limits:
-            cpu: 200m
-            memory: 256Mi
-          requests:
-            cpu: 50m
-            memory: 128Mi
-        webhook:
+        policyController:
           resources:
             limits:
               cpu: 200m
@@ -29,7 +21,7 @@ spec:
             requests:
               cpu: 50m
               memory: 128Mi
-        certController:
+        webhook:
           resources:
             limits:
               cpu: 200m
@@ -39,7 +31,7 @@ spec:
               memory: 128Mi
   destination:
     server: https://kubernetes.default.svc
-    namespace: external-secrets
+    namespace: cosign-system
   syncPolicy:
     automated:
       prune: true
