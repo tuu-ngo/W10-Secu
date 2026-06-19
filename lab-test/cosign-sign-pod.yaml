@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cosign-sign
+  namespace: kube-system
+spec:
+  restartPolicy: Never
+  containers:
+  - name: cosign
+    image: ghcr.io/sigstore/cosign/cosign:v2.4.2
+    args:
+    - sign
+    - --yes
+    - --allow-insecure-registry
+    - --key
+    - /keys/cosign.key
+    - lab-registry.kube-system.svc.cluster.local:5000/w10-secu-api:0.0.2
+    env:
+    - name: COSIGN_PASSWORD
+      value: ""
+    volumeMounts:
+    - name: keys
+      mountPath: /keys
+      readOnly: true
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+  volumes:
+  - name: keys
+    secret:
+      secretName: cosign-key
