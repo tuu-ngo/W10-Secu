@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/YOUR_GITHUB_USER/W10-Secu.git
+    repoURL: https://github.com/tuu-ngo/W10-Secu.git
     path: eso
     targetRevision: main
   destination:
